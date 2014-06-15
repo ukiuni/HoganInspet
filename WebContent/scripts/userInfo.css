@@ -1,0 +1,22 @@
+@CHARSET "UTF-8";
+
+#userArea {
+	float: left;
+	width: 30%;
+	text-align: right;
+}
+
+#messageArea {
+	float: left;
+	width: 65%;
+	margin-left: 5%;
+}
+
+.messagedDate {
+	margin-left: 10%;
+	color: gray;
+}
+
+br .clear {
+	clear: both;
+}

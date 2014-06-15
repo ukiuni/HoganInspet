@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>hogan inspect</title>
+<link rel="STYLESHEET" href="scripts/userInfo.css" type="text/css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://twitter.github.com/hogan.js/builds/3.0.1/hogan-3.0.1.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$.get("templates/header.template.html", function(data) {
+			$("#headerArea").html(data);
+		});
+		$.getJSON("api/user", {
+			name : "aUserName"
+		}, function(data) {
+			$("#userArea").html(Hogan.compile($("#userArea").html()).render(data));
+		});
+		$.getJSON("api/messages", {
+			userName : "aUserName"
+		}, function(data) {
+			var template = Hogan.compile($("#messageInner").html());
+			var formatDate = function() {
+				return function() {
+					var date = new Date(this.createdAt);
+					var retdate = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+					return retdate;
+				};
+			}
+			var renderdArray = data.map(function(message) {
+				message.formatDate = formatDate;
+				return template.render(message);
+			});
+
+			$("#messageInner").html(renderdArray.join(" "));
+		});
+	});
+</script>
+</head>
+<body>
+	<div id="headerArea"></div>
+	<div id="userArea">
+		<h2 align="right">USER INFO</h2>
+		<div>{{name}}</div>
+		<div>{{description}}</div>
+	</div>
+	<div id="messageArea">
+		<h2 align="left">MESSAGE</h2>
+		<div id="messageInner">
+			<div>{{text}}</div>
+			<div class="messagedDate">{{formatDate}}</div>
+		</div>
+	</div>
+	<br class="clear" />
+</body>
+</html>
